@@ -1,5 +1,5 @@
 # Yocto Docker Environment Template
-## This repository contains components for Yocto development using a Docker image.
+## Components for Yocto development running in a Docker container
 
 ### Scripts
 * `build-docker-image.sh`

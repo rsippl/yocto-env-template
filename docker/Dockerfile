@@ -1,11 +1,10 @@
 # this image augments Ubuntu 16.04 with the minimum necessary to run Yocto with support for QEMU and devtool
 FROM ubuntu:16.04
-MAINTAINER hubshuffle <hubshuffled@gmail.com`>
 
 # Upgrade system, add Yocto Proyect basic dependencies and extras
 RUN apt-get update && apt-get -y upgrade && apt-get -y install kmod gawk wget git-core diffstat unzip texinfo \
-gcc-multilib build-essential chrpath socat cpio python python3 python3-pip python3-pexpect xz-utils debianutils \
-iputils-ping libsdl1.2-dev xterm curl vim tzdata
+    gcc-multilib build-essential chrpath socat cpio python python3 python3-pip python3-pexpect xz-utils debianutils \
+    iputils-ping libsdl1.2-dev xterm curl vim tzdata
 
 # for tunctl (qemu)
 RUN apt-get -y install uml-utilities

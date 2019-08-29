@@ -20,5 +20,3 @@ git clone -b ${yocto_release} https://github.com/openembedded/meta-openembedded.
 # Or use Google's repo tool instead, e.g for ST:
 #repo init -u https://github.com/STMicroelectronics/oe-manifest.git -b refs/tags/openstlinux-4.19-thud-mp1-19-02-20
 #repo sync
-
-echo "Done, type \"cd ${workspace_dir} && . ./${layers_dir}/poky/oe-init-build-env\" to create the build environment"

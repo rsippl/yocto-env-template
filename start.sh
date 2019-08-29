@@ -14,6 +14,9 @@ usage() {
   exit 0
 }
 
+container_name="yocto-env"
+image_tag="yocto-env:1.0"
+
 # rough check to see if we are in correct directory
 dirs_to_check=( "./cache/downloads" "./cache/sstate" "./home" )
 for d in "${dirs_to_check[@]}"; do
@@ -80,19 +83,19 @@ if [ "${run_additional_instance}" = true ]; then
         -it \
         --user yocto \
         -w /opt/yocto/workspace \
-        hubshuffle-yocto \
+        ${container_name} \
         /bin/bash
 else
     docker container run \
         -it \
         --rm \
         -v "${PWD}":/opt/yocto \
-        --name hubshuffle-yocto \
+        --name ${container_name} \
         ${arg_net_forward} \
         ${arg_x11_forward} \
         ${arg_privileged} \
         --volume "${PWD}/home":/home/yocto \
-        hubshuffle/yocto:1.2 \
+        ${image_tag} \
         sudo bash -c "groupadd -g 7777 yocto && useradd --password ${empty_password_hash} --shell /bin/bash -u ${UID} -g 7777 \
         yocto && usermod -aG sudo yocto && usermod -aG users yocto && cd /opt/yocto && su yocto"
 fi

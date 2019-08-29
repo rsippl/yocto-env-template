@@ -2,28 +2,18 @@
 
 set -e
 
-usage() {
-  echo "Usage: $0 <target-directory>"
-}
+workspace_dir="workspace"
 
-if [ $# -ne 1 ]; then
-  usage
-  exit 1
-fi
+# TODO set to the Yocto release you want to use, e.g. thud or warrior
+yocto_release="thud"
 
-directory=$1
+mkdir -p "${workspace_dir}/sources" && cd "${workspace_dir}"
 
-if [ -e "${directory}" ]; then
-  echo "Error: \"${directory}\" already exists."
-  usage
-fi
+# clone default layers: poky, OE etc.
+git clone -b ${yocto_release} git://git.yoctoproject.org/poky.git sources/poky
+git clone -b ${yocto_release} https://github.com/openembedded/meta-openembedded.git sources/meta-openembedded
 
-# create the directory
-mkdir -p "${directory}/sources" && cd "${directory}"
+# TODO clone additional layers here, e.g. for Raspberry Pi, use this
+# git clone -b ${yocto_release} https://github.com/agherzan/meta-raspberrypi.git sources/meta-raspberrypi
 
-# clone poky and other layers
-git clone -b thud git://git.yoctoproject.org/poky.git sources/poky
-git clone -b thud https://github.com/agherzan/meta-raspberrypi.git sources/meta-raspberrypi
-git clone -b thud https://github.com/openembedded/meta-openembedded.git sources/meta-openembedded
-
-echo "Done, type \"cd ${directory} && . ./sources/poky/oe-init-build-env\" to create the build environment"
+echo "Done, type \"cd ${workspace_dir} && . ./sources/poky/oe-init-build-env\" to create the build environment"

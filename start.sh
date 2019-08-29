@@ -96,6 +96,12 @@ else
         ${arg_privileged} \
         --volume "${PWD}/home":/home/yocto \
         ${image_tag} \
-        sudo bash -c "groupadd -g 7777 yocto && useradd --password ${empty_password_hash} --shell /bin/bash -u ${UID} -g 7777 \
-        yocto && usermod -aG sudo yocto && usermod -aG users yocto && cd /opt/yocto && su yocto"
+        sudo bash -c "\
+        groupadd -g 7777 yocto && \
+        useradd --password ${empty_password_hash} --shell /bin/bash -u ${UID} -g 7777 yocto && \
+        usermod -aG sudo yocto && \
+        usermod -aG users yocto && \
+        su - yocto -c 'git config --global user.email \"yocto@local\" && git config --global user.name \"Yocto User\" && git config --global color.ui true' && \
+        cd /opt/yocto && \
+        su yocto"
 fi

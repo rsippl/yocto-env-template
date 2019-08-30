@@ -1,5 +1,8 @@
 # this image augments Ubuntu 16.04 with the minimum necessary to run Yocto with support for QEMU and devtool
-FROM ubuntu:16.04
+FROM ubuntu:18.04
+
+# avoid location prompt from tzdata
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Upgrade system, add Yocto Proyect basic dependencies and extras
 RUN apt-get update && apt-get -y upgrade && apt-get -y install kmod gawk wget git-core diffstat unzip texinfo \
@@ -18,9 +21,15 @@ RUN apt-get -y install lighttpd
 # for bitbake -g
 RUN apt-get -y install python3-gi python-pip python3-aptdaemon.gtk3widgets
 
+# for connecting via serial port
+RUN apt-get -y install picocom
+
 # Set up locales
 RUN apt-get -y install locales apt-utils sudo && dpkg-reconfigure locales && locale-gen en_US.UTF-8 && update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 ENV LANG en_US.utf8
+
+# for creating SD card image
+RUN apt-get -y install gdisk
 
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

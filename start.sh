@@ -16,6 +16,7 @@ usage() {
 
 container_name="yocto-env"
 image_tag="yocto-env:1.0"
+serial_dev="/dev/ttyUSB0"
 
 # rough check to see if we are in correct directory
 dirs_to_check=( "./cache/downloads" "./cache/sstate" "./home" )
@@ -78,6 +79,14 @@ done
 
 empty_password_hash="U6aMy0wojraho"
 
+# check if serial device file exists
+if [ -e ${serial_dev} ]; then
+    echo "Serial device file ${serial_dev} found, you may use ./serial.sh."
+    device_opt="--device=${serial_dev}:${serial_dev}"
+else
+    echo "Serial device file ${serial_dev} not found, ./serial.sh will not work!"
+fi
+
 if [ "${run_additional_instance}" = true ]; then
     docker container exec \
         -it \
@@ -95,12 +104,14 @@ else
         ${arg_x11_forward} \
         ${arg_privileged} \
         --volume "${PWD}/home":/home/yocto \
+        ${device_opt} \
         ${image_tag} \
         sudo bash -c "\
         groupadd -g 7777 yocto && \
         useradd --password ${empty_password_hash} --shell /bin/bash -u ${UID} -g 7777 yocto && \
         usermod -aG sudo yocto && \
         usermod -aG users yocto && \
+        usermod -aG dialout yocto && \
         cd /opt/yocto && \
         su yocto"
 fi
